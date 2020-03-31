@@ -10,9 +10,10 @@ import json
 import plotly.express as px
 from urllib.request import urlopen
 
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+#external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+#app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app = dash.Dash(__name__)
 
 server = app.server
 
@@ -27,6 +28,7 @@ def plot_choropleth(map_data, val_json, val_loc, val_color, val_frame):
                             mapbox_style="carto-darkmatter",
                             zoom=6, center = {"lat": 47.05048, "lon": 8.30635},
                             opacity=0.5,
+                            height=500,
                             #labels={'Cases':'Confirmed cases'},
                             animation_frame=val_frame,
                             template="plotly_dark",
@@ -39,7 +41,7 @@ def plot_bar(bar_data, val_x, val_y, val_color, val_text, val_title='',val_scale
     fig = px.bar(bar_data, x=val_x, y=val_y,
              color=val_color, text=val_text,
              orientation='v',
-             height=600,
+             height=500,
              title= val_title,
              template="plotly_dark",
              color_discrete_sequence= px.colors.cyclical.Phase,
@@ -58,7 +60,7 @@ def plot_line(data, val_x, val_y, val_color, val_text='', val_title=''):
              color=val_color,
              #text=val_text,
              #orientation='v',
-             height=600,
+             height=500,
              title=val_title,
              template="plotly_dark",
              color_discrete_sequence= px.colors.cyclical.Phase,
@@ -117,36 +119,22 @@ fig5 = plot_line(df_cfr_stack, 'Date', 'CFR', 'Canton','CFR')
 #fig.update_yaxes(type="log")
 
 
-colors = {
-    'background': '#111111',
-    'text': '#7FDBFF'
-}
 
-app.layout = html.Div( style={'backgroundColor': colors['background']}, children=[
+app.layout = html.Div( children=[
     html.Div(children=[
-        html.H2(children='Evolution of Cases', style={
-            'textAlign': 'center',
-            'color': colors['text']}),
+        html.H2(children='Evolution of Cases'),
         dcc.Graph(id='choropleth', figure=fig1)]),
     html.Div(children=[
-        html.H2(children='Evolution of Cases per 100k', style={
-            'textAlign': 'center',
-            'color': colors['text']}),
+        html.H2(children='Evolution of Cases per 100k'),
         dcc.Graph(id='choropleth2', figure=fig2)]),
     html.Div(children=[
-        html.H2(children='Cases by Canton', style={
-            'textAlign': 'center',
-            'color': colors['text']}),
+        html.H2(children='Cases by Canton'),
         dcc.Graph(id='bar', figure=fig3)]),
     html.Div(children=[
-        html.H2(children='Cases by Canton per 100k',style={
-            'textAlign': 'center',
-            'color': colors['text']}),
+        html.H2(children='Cases by Canton per 100k'),
         dcc.Graph(id='bar2', figure=fig4)]),
     html.Div(children=[
-        html.H2(children='Case Fatality Rate',style={
-            'textAlign': 'center',
-            'color': colors['text']}),
+        html.H2(children='Case Fatality Rate'),
         dcc.Graph(id='line', figure=fig5)])
 ])
 
