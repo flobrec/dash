@@ -10,6 +10,9 @@ import json
 import plotly.express as px
 from urllib.request import urlopen
 
+import functions as func
+
+
 #external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 #app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
@@ -17,65 +20,13 @@ app = dash.Dash(__name__)
 
 server = app.server
 
-def my_function(x):
-    return 5*x
-
-def plot_choropleth(map_data, val_json, val_loc, val_color, val_frame):
-    max_color = max(map_data[val_color]) 
-    fig = px.choropleth_mapbox(map_data, geojson=val_json, locations=val_loc, color=val_color,
-                            color_continuous_scale="peach",
-                            range_color=(0, max_color),
-                            mapbox_style="carto-darkmatter",
-                            zoom=6, center = {"lat": 47.05048, "lon": 8.30635},
-                            opacity=0.5,
-                            height=500,
-                            #labels={'Cases':'Confirmed cases'},
-                            animation_frame=val_frame,
-                            template="plotly_dark",
-                            #hover_name='Date'
-                          )
-    fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
-    return fig
-
-def plot_bar(bar_data, val_x, val_y, val_color, val_text, val_title='',val_scale='linear'):
-    fig = px.bar(bar_data, x=val_x, y=val_y,
-             color=val_color, text=val_text,
-             orientation='v',
-             height=500,
-             title= val_title,
-             template="plotly_dark",
-             color_discrete_sequence= px.colors.cyclical.Phase,
-             #hover_name='Canton'
-             )
-    # fig.update_traces(hovertemplate = '<b>Canton: %{hovertext}</b><br>'
-    #           +'Date: %{x}<br>'
-    #           +'Cases: %{y:.0f}'
-    #           )
-    fig.update_xaxes(tickangle=-90, showticklabels=True, type = 'category')
-    fig.update_yaxes(type=val_scale)
-    return fig
-
-def plot_line(data, val_x, val_y, val_color, val_text='', val_title=''):
-    fig = px.line(data, x=val_x, y=val_y,
-             color=val_color,
-             #text=val_text,
-             #orientation='v',
-             height=500,
-             title=val_title,
-             template="plotly_dark",
-             color_discrete_sequence= px.colors.cyclical.Phase,
-             #hover_name='Canton'
-             )
-    fig.update_xaxes(tickangle=-90, showticklabels=True, type = 'category')
-    return fig
-
 
 file = "https://raw.githubusercontent.com/flobrec/covid19/master/g2k20.geojson"
 with urlopen(file) as response:
-    cantons = json.load(response)
+    canton_json = json.load(response)
 df_cant_abv = pd.read_csv("https://raw.githubusercontent.com/flobrec/covid19/master/Cantons_ABV.csv", sep=",")
 for i in range(0,26):
-    cantons['features'][i]['id'] = df_cant_abv.iloc[i]['Canton']
+    canton_json['features'][i]['id'] = df_cant_abv.iloc[i]['Canton']
     
 
 df_demographic = pd.read_csv("https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/demographics.csv", sep=',', error_bad_lines=False)      
@@ -110,15 +61,12 @@ bar_data_pc = df_cantons.groupby(['Canton', 'Date'])['CasesPer100k'].sum().reset
 max_color = max(df_cantons['Cases'])
 max_color_100k = max(df_cantons['CasesPer100k'])
 
-fig1 = plot_choropleth(df_cantons, cantons, 'Canton', 'Cases', 'Date')
-fig2 = plot_choropleth(df_cantons, cantons, 'Canton', 'CasesPer100k', 'Date')
-fig3 = plot_bar(bar_data, 'Date', 'Cases', 'Canton','Cases')
-fig4 = plot_bar(bar_data_pc, 'Date', 'CasesPer100k', 'Canton', 'CasesPer100k')
-fig5 = plot_line(df_cfr_stack, 'Date', 'CFR', 'Canton','CFR')
+fig1 = func.plot_choropleth(df_cantons, canton_json, 'Canton', 'Cases', 'Date')
+fig2 = func.plot_choropleth(df_cantons, canton_json, 'Canton', 'CasesPer100k', 'Date')
+fig3 = func.plot_bar(bar_data, 'Date', 'Cases', 'Canton','Cases')
+fig4 = func.plot_bar(bar_data_pc, 'Date', 'CasesPer100k', 'Canton', 'CasesPer100k')
+fig5 = func.plot_line(df_cfr_stack, 'Date', 'CFR', 'Canton','CFR')
  
-#fig.update_yaxes(type="log")
-
-
 
 app.layout = html.Div( children=[
     html.Div(children=[
