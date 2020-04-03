@@ -78,6 +78,16 @@ df_plot2 = df_openzh_ch[['Hospitalised', 'Intensive Care', 'Ventilator']].stack(
 df_plot2.columns = ['Date', 'Type', 'Reported Numbers']
 fig2_ch = func.plot_line(df_plot2 ,'Date', 'Reported Numbers', 'Type','' ,'Hospitalisation') 
 
+df_choro_case = df_openzh_pad.replace(np.nan, 0)
+df_choro_phk = df_openzh_phk_pad.replace(np.nan, 0)
+df_choro_fat = df_openzh_pad.replace(np.nan, 0)
+fig11 = func.plot_choropleth(df_choro_case[['Date', 'Canton', 'Confirmed Cases']], canton_json, 'Canton', 'Confirmed Cases', 'Date', 'Confirmed Cases')
+fig21 = func.plot_choropleth(df_choro_phk, canton_json, 'Canton', 'Confirmed Cases', 'Date', "Confirmed Cases Prevalence per 100'000")
+fig31 = func.plot_choropleth(df_choro_fat, canton_json, 'Canton', 'Fatalities', 'Date', 'Fatalities')
+fig41 = func.plot_bar(df_openzh_pad, 'Date', 'Confirmed Cases', 'Canton', 'Confirmed Cases', 'Confirmed Cases')
+fig51 = func.plot_line(df_openzh_phk_pad , 'Date', 'Confirmed Cases', 'Canton', 'Confirmed Cases', "Confirmed Cases Prevalence per 100'000")
+fig61 = func.plot_bar(df_openzh_pad , 'Date', 'Fatalities', 'Canton', 'Fatalities', 'Fatalities')
+fig71 = func.plot_line(df_openzh_pad, 'Date', 'CFR', 'Canton','CFR', 'Case Fatality Ratio')
 
 
 
