@@ -25,20 +25,20 @@
 }
 
 .flex-container .flex-box-3 {
-  width: 33%;
-    margin: 5px;
-  text-align: center;
-  line-height: 20px;
+	width: 33%;
+	margin: 5px;
+	text-align: center;
+	line-height: 20px;
 	background-color: AntiqueWhite;
 	font-size: 2vw;;
 	color: Black;
 }
 
 .flex-container .flex-box-1 {
-  width: 100%;
-    margin: 5px;
-  text-align: center;
-  line-height: 20px;
+	width: 100%;
+	margin: 5px;
+	text-align: center;
+	line-height: 20px;
 	background-color: AntiqueWhite;
 	font-size: 2vw;;
 	color: Black;
@@ -62,7 +62,6 @@
 	position: relative;
 	float: left;
 }
-
 
 /* PLotly.js 
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
