@@ -24,7 +24,7 @@ ncumul_ind = ['ncumul_tested','ncumul_conf','ncumul_hosp', 'ncumul_ICU', 'ncumul
 col_header = ['Date', 'Time', 'Canton', 'Tested', 'Confirmed Cases', 'Hospitalised', 'Intensive Care', 'Ventilator', 'Released', 'Fatalities', 'Source']
 ncumul_ind = col_header[3:10]
 str_canton = 'abbreviation_canton_and_fl'
-start_date='2020-03-06'
+start_date='2020-03-15'
 
 file = "https://raw.githubusercontent.com/flobrec/covid19/master/g2k20.geojson"
 with urlopen(file) as response:
@@ -79,11 +79,20 @@ df_plot2.columns = ['Date', 'Type', 'Reported Numbers']
 fig2_ch = func.plot_line(df_plot2 ,'Date', 'Reported Numbers', 'Type','' ,'Hospitalisation') 
 
 df_choro_case = df_openzh_pad.replace(np.nan, 0)
+df_choro_case.set_index('Date', drop=False, inplace=True)
+df_choro_case = df_choro_case[start_date:][['Date','Canton','Confirmed Cases']]
+
 df_choro_phk = df_openzh_phk_pad.replace(np.nan, 0)
+df_choro_phk.set_index('Date', drop=False, inplace=True)
+df_choro_phk = df_choro_phk[start_date:][['Date','Canton','Confirmed Cases']]
+
 df_choro_fat = df_openzh_pad.replace(np.nan, 0)
-fig1 = func.plot_choropleth(df_choro_case[['Date', 'Canton', 'Confirmed Cases']], canton_json, 'Canton', 'Confirmed Cases', 'Date', 'Confirmed Cases')
-#fig2 = func.plot_choropleth(df_choro_phk, canton_json, 'Canton', 'Confirmed Cases', 'Date', "Confirmed Cases Prevalence per 100'000")
-#fig3 = func.plot_choropleth(df_choro_fat, canton_json, 'Canton', 'Fatalities', 'Date', 'Fatalities')
+df_choro_fat.set_index('Date', drop=False, inplace=True)
+df_choro_fat = df_choro_fat[start_date:][['Date','Canton','Fatalities']]
+
+fig1 = func.plot_choropleth(df_choro_case, canton_json, 'Canton', 'Confirmed Cases', 'Date', 'Confirmed Cases')
+fig2 = func.plot_choropleth(df_choro_phk, canton_json, 'Canton', 'Confirmed Cases', 'Date', "Confirmed Cases Prevalence per 100'000")
+fig3 = func.plot_choropleth(df_choro_fat, canton_json, 'Canton', 'Fatalities', 'Date', 'Fatalities')
 fig4 = func.plot_bar(df_openzh_pad, 'Date', 'Confirmed Cases', 'Canton', 'Confirmed Cases', 'Confirmed Cases')
 fig5 = func.plot_line(df_openzh_phk_pad , 'Date', 'Confirmed Cases', 'Canton', 'Confirmed Cases', "Confirmed Cases Prevalence per 100'000")
 fig6 = func.plot_bar(df_openzh_pad , 'Date', 'Fatalities', 'Canton', 'Fatalities', 'Fatalities')
@@ -147,8 +156,8 @@ app.layout = html.Div( children=[
         html.Div(className="flex-box-1", children=[
             html.P('Charts Cantons'),
             dcc.Graph(figure=fig1),
-            #dcc.Graph(figure=fig2),
-            #dcc.Graph(figure=fig3),
+            dcc.Graph(figure=fig2),
+            dcc.Graph(figure=fig3),
             dcc.Graph(figure=fig4),
             dcc.Graph(figure=fig5),
             dcc.Graph(figure=fig6),
