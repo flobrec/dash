@@ -20,6 +20,11 @@ app = dash.Dash(__name__)
 
 server = app.server
 
+ncumul_ind = ['ncumul_tested','ncumul_conf','ncumul_hosp', 'ncumul_ICU', 'ncumul_vent', 'ncumul_released','ncumul_deceased']
+col_header = ['Date', 'Time', 'Canton', 'Tested', 'Confirmed Cases', 'Hospitalised', 'Intensive Care', 'Ventilator', 'Released', 'Fatalities', 'Source']
+ncumul_ind = col_header[3:10]
+str_canton = 'abbreviation_canton_and_fl'
+start_date='2020-03-06'
 
 file = "https://raw.githubusercontent.com/flobrec/covid19/master/g2k20.geojson"
 with urlopen(file) as response:
@@ -30,6 +35,8 @@ for i in range(0,26):
     
 
 df_demographic = pd.read_csv("https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/demographics.csv", sep=',', error_bad_lines=False)      
+
+link_openzh = "https://raw.githubusercontent.com/openZH/covid_19/master/COVID19_Fallzahlen_CH_total.csv"
 
 df_orig = pd.read_csv("https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_cases_switzerland.csv", sep=',', index_col='Date', error_bad_lines=False)
 df_orig_fat = pd.read_csv("https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_fatalities_switzerland.csv", sep=',', index_col='Date', error_bad_lines=False)
