@@ -91,8 +91,8 @@ df_choro_fat.set_index('Date', drop=False, inplace=True)
 df_choro_fat = df_choro_fat[start_date:][['Date','Canton','Fatalities']]
 
 fig1 = func.plot_choropleth(df_choro_case, canton_json, 'Canton', 'Confirmed Cases', 'Date', 'Confirmed Cases')
-fig2 = func.plot_choropleth(df_choro_phk, canton_json, 'Canton', 'Confirmed Cases', 'Date', "Confirmed Cases Prevalence per 100'000")
-fig3 = func.plot_choropleth(df_choro_fat, canton_json, 'Canton', 'Fatalities', 'Date', 'Fatalities')
+#fig2 = func.plot_choropleth(df_choro_phk, canton_json, 'Canton', 'Confirmed Cases', 'Date', "Confirmed Cases Prevalence per 100'000")
+#fig3 = func.plot_choropleth(df_choro_fat, canton_json, 'Canton', 'Fatalities', 'Date', 'Fatalities')
 fig4 = func.plot_bar(df_openzh_pad, 'Date', 'Confirmed Cases', 'Canton', 'Confirmed Cases', 'Confirmed Cases')
 fig5 = func.plot_line(df_openzh_phk_pad , 'Date', 'Confirmed Cases', 'Canton', 'Confirmed Cases', "Confirmed Cases Prevalence per 100'000")
 fig6 = func.plot_bar(df_openzh_pad , 'Date', 'Fatalities', 'Canton', 'Fatalities', 'Fatalities')
@@ -156,8 +156,8 @@ app.layout = html.Div( children=[
         html.Div(className="flex-box-1", children=[
             html.P('Charts Cantons'),
             dcc.Graph(figure=fig1),
-            dcc.Graph(figure=fig2),
-            dcc.Graph(figure=fig3),
+            #dcc.Graph(figure=fig2),
+            #dcc.Graph(figure=fig3),
             dcc.Graph(figure=fig4),
             dcc.Graph(figure=fig5),
             dcc.Graph(figure=fig6),
