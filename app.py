@@ -123,10 +123,10 @@ fig5 = func.plot_line(df_cfr_stack, 'Date', 'CFR', 'Canton','CFR')
 app.layout = html.Div( children=[
     html.Div(children=[
         html.H2(children='Evolution of Cases'),
-        dcc.Graph(id='choropleth', figure=fig1)]),
+        dcc.Graph(id='choropleth', figure=fig1_ch)]),
     html.Div(children=[
         html.H2(children='Evolution of Cases per 100k'),
-        dcc.Graph(id='choropleth2', figure=fig2)]),
+        dcc.Graph(id='choropleth2', figure=fig2_ch)]),
     html.Div(children=[
         html.H2(children='Cases by Canton'),
         dcc.Graph(id='bar', figure=fig3)]),
