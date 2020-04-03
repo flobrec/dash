@@ -98,61 +98,61 @@ fig2_ch = func.plot_line(df_plot2 ,'Date', 'Reported Numbers', 'Type','' ,'Hospi
 
 
 app.layout = html.Div( children=[
-    html.Div(className="flex-container", children=[
-        html.Div(className="flex-box-3", children=[
-            html.P('Confirmed Cases'),
-            html.P(df_openzh_ch['Confirmed Cases'].iloc[-1]),
-            html.P(func.format_diff_line(df_openzh_ch_diff['Confirmed Cases'].iloc[-1])),
-            html.P(func.format_pct_line(df_openzh_ch_growth['Confirmed Cases'].iloc[-1])),
-            ]),
-        html.Div(className="flex-box-3", children=[
-            html.P('Fatalities'),
-            html.P(df_openzh_ch['Fatalities'].iloc[-1]),
-            html.P(func.format_diff_line(df_openzh_ch_diff['Fatalities'].iloc[-1])),
-            html.P(func.format_pct_line(df_openzh_ch_growth['Fatalities'].iloc[-1])),
-            ]),
-        html.Div(className="flex-box-3", children=[
-            html.P('Released'),
-            html.P(df_openzh_ch['Released'].iloc[-1]),
-            html.P(func.format_diff_line(df_openzh_ch_diff['Released'].iloc[-1])),
-            html.P(func.format_pct_line(df_openzh_ch_growth['Released'].iloc[-1])),
-            ]),
-        ]),
-    html.Div(className="flex-container", children=[
-        html.Div(className="flex-box-3", children=[
-            html.P('Hospitalised'),
-            html.P(df_openzh_ch['Hospitalised'].iloc[-1]),
-            html.P(func.format_diff_line(df_openzh_ch_diff['Hospitalised'].iloc[-1])),
-            html.P(func.format_pct_line(df_openzh_ch_growth['Hospitalised'].iloc[-1])),
-            ]),
-        html.Div(className="flex-box-3", children=[
-            html.P('Intensive Care'),
-            html.P(df_openzh_ch['Intensive Care'].iloc[-1]),
-            html.P(func.format_diff_line(df_openzh_ch_diff['Intensive Care'].iloc[-1])),
-            html.P(func.format_pct_line(df_openzh_ch_growth['Intensive Care'].iloc[-1])),
-            ]),
-        html.Div(className="flex-box-3", children=[
-            html.P('Ventilator'),
-            html.P(df_openzh_ch['Ventilator'].iloc[-1]),
-            html.P(func.format_diff_line(df_openzh_ch_diff['Ventilator'].iloc[-1])),
-            html.P(func.format_pct_line(df_openzh_ch_growth['Ventilator'].iloc[-1])),
-            ]),
-        ]),
-    html.Div(className="flex-container", children=[
-        html.Div(className="flex-box-1", children=[
-            html.P('Updated Cantons'),
-            html.P(num_reporting),
-            ]),
-        ]),
-    html.Div(className="flex-container", children=[
-        html.Div(className="flex-box-1", children=[
-            html.P('Charts Switzerland'),
-            dcc.Graph(figure=fig1_ch),
-            dcc.Graph(figure=fig2_ch),
-            ]),
-        ]),
-    html.Div(className="flex-container", children=[
-        html.Div(className="flex-box-1", children=[
+    # html.Div(className="flex-container", children=[
+    #     html.Div(className="flex-box-3", children=[
+    #         html.P('Confirmed Cases'),
+    #         html.P(df_openzh_ch['Confirmed Cases'].iloc[-1]),
+    #         html.P(func.format_diff_line(df_openzh_ch_diff['Confirmed Cases'].iloc[-1])),
+    #         html.P(func.format_pct_line(df_openzh_ch_growth['Confirmed Cases'].iloc[-1])),
+    #         ]),
+    #     html.Div(className="flex-box-3", children=[
+    #         html.P('Fatalities'),
+    #         html.P(df_openzh_ch['Fatalities'].iloc[-1]),
+    #         html.P(func.format_diff_line(df_openzh_ch_diff['Fatalities'].iloc[-1])),
+    #         html.P(func.format_pct_line(df_openzh_ch_growth['Fatalities'].iloc[-1])),
+    #         ]),
+    #     html.Div(className="flex-box-3", children=[
+    #         html.P('Released'),
+    #         html.P(df_openzh_ch['Released'].iloc[-1]),
+    #         html.P(func.format_diff_line(df_openzh_ch_diff['Released'].iloc[-1])),
+    #         html.P(func.format_pct_line(df_openzh_ch_growth['Released'].iloc[-1])),
+    #         ]),
+    #     ]),
+    # html.Div(className="flex-container", children=[
+    #     html.Div(className="flex-box-3", children=[
+    #         html.P('Hospitalised'),
+    #         html.P(df_openzh_ch['Hospitalised'].iloc[-1]),
+    #         html.P(func.format_diff_line(df_openzh_ch_diff['Hospitalised'].iloc[-1])),
+    #         html.P(func.format_pct_line(df_openzh_ch_growth['Hospitalised'].iloc[-1])),
+    #         ]),
+    #     html.Div(className="flex-box-3", children=[
+    #         html.P('Intensive Care'),
+    #         html.P(df_openzh_ch['Intensive Care'].iloc[-1]),
+    #         html.P(func.format_diff_line(df_openzh_ch_diff['Intensive Care'].iloc[-1])),
+    #         html.P(func.format_pct_line(df_openzh_ch_growth['Intensive Care'].iloc[-1])),
+    #         ]),
+    #     html.Div(className="flex-box-3", children=[
+    #         html.P('Ventilator'),
+    #         html.P(df_openzh_ch['Ventilator'].iloc[-1]),
+    #         html.P(func.format_diff_line(df_openzh_ch_diff['Ventilator'].iloc[-1])),
+    #         html.P(func.format_pct_line(df_openzh_ch_growth['Ventilator'].iloc[-1])),
+    #         ]),
+    #     ]),
+    # html.Div(className="flex-container", children=[
+    #     html.Div(className="flex-box-1", children=[
+    #         html.P('Updated Cantons'),
+    #         html.P(num_reporting),
+    #         ]),
+    #     ]),
+    # html.Div(className="flex-container", children=[
+    #     html.Div(className="flex-box-1", children=[
+    #         html.P('Charts Switzerland'),
+    #         dcc.Graph(figure=fig1_ch),
+    #         dcc.Graph(figure=fig2_ch),
+    #         ]),
+    #     ]),
+    # html.Div(className="flex-container", children=[
+    #     html.Div(className="flex-box-1", children=[
             html.P('Charts Cantons'),
             dcc.Graph(figure=fig1),
             dcc.Graph(figure=fig2),
@@ -161,8 +161,8 @@ app.layout = html.Div( children=[
             dcc.Graph(figure=fig5),
             dcc.Graph(figure=fig6),
             dcc.Graph(figure=fig7),
-            ]),        
-        ]),
+            # ]),        
+        # ]),
      
       
     #     html.H2(children='Evolution of Cases'),
