@@ -38,6 +38,51 @@ df_demographic = pd.read_csv("https://raw.githubusercontent.com/daenuprobst/covi
 
 link_openzh = "https://raw.githubusercontent.com/openZH/covid_19/master/COVID19_Fallzahlen_CH_total.csv"
 
+df_openzh = pd.read_csv(link_openzh, sep= ',')
+df_openzh.columns = col_header
+df_openzh = df_openzh[df_openzh['Canton']!='FL']    # remove FL
+#df_openzh['date']= pd.to_datetime(df_openzh['date'], format="%Y-%m-%d")
+
+df_openzh.sort_values(by=['Date'], ascending=True, inplace=True)
+
+index = ncumul_ind.copy()
+index.insert(0,'Canton')
+index.insert(0,'Date')
+df_openzh_mi = df_openzh[index]
+df_openzh_mi = df_openzh_mi.set_index(['Date', 'Canton'])     # multi index
+df_openzh_uns = df_openzh_mi.unstack('Canton')                # unstack
+df_openzh_uns_pad = df_openzh_uns.fillna(method='pad')          # pad nan
+df_openzh_pad = df_openzh_uns_pad.stack(dropna=False)                       # stack
+df_openzh_pad.reset_index(inplace=True)
+df_openzh_pad.sort_values(by=['Date'], ascending=True, inplace=True)
+
+df_openzh_diff = df_openzh_uns_pad.diff()
+df_openzh_growth = df_openzh_uns_pad.pct_change()
+
+df_openzh_phk_pad = pd.merge(df_openzh_pad, df_demographic[['Canton','Population']], left_on='Canton', right_on='Canton',how='left')
+df_openzh_phk_pad[ncumul_ind] = round(df_openzh_phk_pad[ncumul_ind].div(df_openzh_phk_pad['Population'],axis=0)*100000,2)
+
+df_openzh_pad['CFR'] = round(df_openzh_pad['Fatalities'].div(df_openzh_pad['Confirmed Cases']), 3)
+
+df_openzh_ch = df_openzh_uns_pad.groupby(axis=1,level=0).sum()
+df_openzh_ch_diff = df_openzh_ch.diff()
+df_openzh_ch_growth = df_openzh_ch.pct_change()
+
+num_reporting = df_openzh_uns.groupby(axis=1,level=0).count().loc[:,'Confirmed Cases'].iloc[-1]
+
+df_plot1 = df_openzh_ch[['Confirmed Cases', 'Fatalities', 'Released']].stack().reset_index()
+df_plot1.columns = ['Date', 'Type', 'Reported Numbers']
+fig1_ch = func.plot_line(df_plot1 ,'Date', 'Reported Numbers', 'Type','' ,'Confirmed Cases, Fatalities and Released from Hospital') 
+
+df_plot2 = df_openzh_ch[['Hospitalised', 'Intensive Care', 'Ventilator']].stack().reset_index()
+df_plot2.columns = ['Date', 'Type', 'Reported Numbers']
+fig2_ch = func.plot_line(df_plot2 ,'Date', 'Reported Numbers', 'Type','' ,'Hospitalisation') 
+
+
+
+
+#***********************************************************
+
 df_orig = pd.read_csv("https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_cases_switzerland.csv", sep=',', index_col='Date', error_bad_lines=False)
 df_orig_fat = pd.read_csv("https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_fatalities_switzerland.csv", sep=',', index_col='Date', error_bad_lines=False)
 
