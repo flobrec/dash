@@ -15,6 +15,7 @@ def plot_choropleth(map_data, val_json, val_loc, val_color, val_frame, val_title
     max_color = max(map_data[val_color]) 
     fig = px.choropleth_mapbox(map_data, geojson=val_json, locations=val_loc, color=val_color,
                             color_continuous_scale="peach",
+                            #color_discrete_sequence="peach",
                             range_color=(0, max_color),
                             mapbox_style="carto-darkmatter",
                             zoom=6, center = {"lat": 47.05048, "lon": 8.30635},

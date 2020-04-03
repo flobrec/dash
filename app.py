@@ -24,7 +24,7 @@ ncumul_ind = ['ncumul_tested','ncumul_conf','ncumul_hosp', 'ncumul_ICU', 'ncumul
 col_header = ['Date', 'Time', 'Canton', 'Tested', 'Confirmed Cases', 'Hospitalised', 'Intensive Care', 'Ventilator', 'Released', 'Fatalities', 'Source']
 ncumul_ind = col_header[3:10]
 str_canton = 'abbreviation_canton_and_fl'
-start_date='2020-03-15'
+start_date='2020-03-06'
 
 file = "https://raw.githubusercontent.com/flobrec/covid19/master/g2k20.geojson"
 with urlopen(file) as response:
@@ -67,6 +67,7 @@ df_openzh_pad['CFR'] = round(df_openzh_pad['Fatalities'].div(df_openzh_pad['Conf
 df_openzh_ch = df_openzh_uns_pad.groupby(axis=1,level=0).sum()
 df_openzh_ch_diff = df_openzh_ch.diff()
 df_openzh_ch_growth = df_openzh_ch.pct_change()
+df_openzh_ch_growth.replace([np.inf, -np.inf], np.nan, inplace=True)
 
 num_reporting = df_openzh_uns.groupby(axis=1,level=0).count().loc[:,'Confirmed Cases'].iloc[-1]
 
@@ -76,27 +77,34 @@ fig1_ch = func.plot_line(df_plot1 ,'Date', 'Reported Numbers', 'Type','' ,'Confi
 
 df_plot2 = df_openzh_ch[['Hospitalised', 'Intensive Care', 'Ventilator']].stack().reset_index()
 df_plot2.columns = ['Date', 'Type', 'Reported Numbers']
-fig2_ch = func.plot_line(df_plot2 ,'Date', 'Reported Numbers', 'Type','' ,'Hospitalisation') 
+fig2_ch = func.plot_line(df_plot2 ,'Date', 'Reported Numbers', 'Type','' ,'Hospitalisation')
+
+df_plot3 = df_openzh_ch_growth[['Confirmed Cases', 'Fatalities']].stack().reset_index()
+df_plot3.columns = ['Date', 'Type', 'Percentage Changes']
+fig3_ch = func.plot_line(df_plot3 ,'Date', 'Percentage Changes', 'Type','' ,'Percentage Changes')
 
 df_choro_case = df_openzh_pad.replace(np.nan, 0)
 df_choro_case.set_index('Date', drop=False, inplace=True)
-df_choro_case = df_choro_case[start_date:][['Date','Canton','Confirmed Cases']]
+df_choro_case = df_choro_case[start_date:][['Date','Canton','Confirmed Cases']].copy()
 
 df_choro_phk = df_openzh_phk_pad.replace(np.nan, 0)
 df_choro_phk.set_index('Date', drop=False, inplace=True)
-df_choro_phk = df_choro_phk[start_date:][['Date','Canton','Confirmed Cases']]
+df_choro_phk = df_choro_phk[start_date:][['Date','Canton','Confirmed Cases']].copy()
 
 df_choro_fat = df_openzh_pad.replace(np.nan, 0)
 df_choro_fat.set_index('Date', drop=False, inplace=True)
-df_choro_fat = df_choro_fat[start_date:][['Date','Canton','Fatalities']]
+df_choro_fat = df_choro_fat[start_date:][['Date','Canton','Fatalities']].copy()
 
 fig1 = func.plot_choropleth(df_choro_case, canton_json, 'Canton', 'Confirmed Cases', 'Date', 'Confirmed Cases')
-#fig2 = func.plot_choropleth(df_choro_phk, canton_json, 'Canton', 'Confirmed Cases', 'Date', "Confirmed Cases Prevalence per 100'000")
-#fig3 = func.plot_choropleth(df_choro_fat, canton_json, 'Canton', 'Fatalities', 'Date', 'Fatalities')
+fig2 = func.plot_choropleth(df_choro_phk, canton_json, 'Canton', 'Confirmed Cases', 'Date', "Confirmed Cases Prevalence per 100'000")
+fig3 = func.plot_choropleth(df_choro_fat, canton_json, 'Canton', 'Fatalities', 'Date', 'Fatalities')
+
 fig4 = func.plot_bar(df_openzh_pad, 'Date', 'Confirmed Cases', 'Canton', 'Confirmed Cases', 'Confirmed Cases')
 fig5 = func.plot_line(df_openzh_phk_pad , 'Date', 'Confirmed Cases', 'Canton', 'Confirmed Cases', "Confirmed Cases Prevalence per 100'000")
 fig6 = func.plot_bar(df_openzh_pad , 'Date', 'Fatalities', 'Canton', 'Fatalities', 'Fatalities')
 fig7 = func.plot_line(df_openzh_pad, 'Date', 'CFR', 'Canton','CFR', 'Case Fatality Ratio')
+# fig8 = func.plot_line(df_openzh_growth, 'Date', 'Confirmed Cases', 'Canton','Confirmed Cases', 'Percentage Change of Confirmed Cases')
+# fig9 = func.plot_line(df_openzh_growth, 'Date', 'Fatalities', 'Canton','Fatalities', 'Percentage Change of Fatalities')
 
 app.layout = html.Div( children=[
     html.Div(className="flex-container", children=[
@@ -150,6 +158,7 @@ app.layout = html.Div( children=[
             html.P('Charts Switzerland'),
             dcc.Graph(figure=fig1_ch),
             dcc.Graph(figure=fig2_ch),
+            dcc.Graph(figure=fig3_ch),            
             ]),
         ]),
     html.Div(className="flex-container", children=[
@@ -162,6 +171,8 @@ app.layout = html.Div( children=[
             dcc.Graph(figure=fig5),
             dcc.Graph(figure=fig6),
             dcc.Graph(figure=fig7),
+            #dcc.Graph(figure=fig8),
+            #dcc.Graph(figure=fig9),            
             ]),        
         ]),
     ])
