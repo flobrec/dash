@@ -146,7 +146,7 @@ app.layout = html.Div( children=[
     html.Div(className="flex-container", children=[
         html.Div(className="flex-box-1", children=[
             html.P('Charts Cantons'),
-            #dcc.Graph(figure=fig1),
+            dcc.Graph(figure=fig1),
             #dcc.Graph(figure=fig2),
             #dcc.Graph(figure=fig3),
             dcc.Graph(figure=fig4),
