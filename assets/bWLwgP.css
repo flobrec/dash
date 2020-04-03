@@ -16,6 +16,53 @@
 - Media Queries
 */
 
+/* Custom 
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+.flex-container {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.flex-container .flex-box-3 {
+	width: 33%;
+	margin: 5px;
+	text-align: center;
+	line-height: 20px;
+	background-color: AntiqueWhite;
+	font-size: 2vw;;
+	color: Black;
+}
+
+.flex-container .flex-box-1 {
+	width: 100%;
+	margin: 5px;
+	text-align: center;
+	line-height: 20px;
+	background-color: AntiqueWhite;
+	font-size: 2vw;;
+	color: Black;
+}
+
+.header-parent{
+	position: relative;
+	overflow: hidden;
+	width: 100%;
+}
+
+.header-div {
+	height: 60px;
+	width: 49%;
+	line-height: 60px;
+	border: thin lightgrey solid;
+	background-color: AntiqueWhite;
+	font-size: 22px;
+	color: Black;
+	text-align: center;
+	position: relative;
+	float: left;
+}
+
 /* PLotly.js 
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 /* plotly.js's modebar's z-index is 1001 by default
