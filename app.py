@@ -360,4 +360,4 @@ def update_figure2(indicator_val, report_val , date_val):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True, use_reloader=True)
+    app.run_server(debug=False, use_reloader=True)
