@@ -2,5 +2,5 @@ conda-env
 *.pyc
 .DS_Store
 .env
-vscode
+.vscode
 __pycache__
