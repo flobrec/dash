@@ -12,7 +12,8 @@ import plotly.express as px
 import plotly.graph_objects as go
 import plotly as py
 from urllib.request import urlopen
-from datetime import datetime
+from datetime import datetime, timedelta
+import re
 
 
 
@@ -157,6 +158,8 @@ df_openzh_ch_growth = df_openzh_ch.pct_change()
 df_openzh_ch_growth.replace([np.inf, -np.inf], np.nan, inplace=True)
 
 num_reporting = df_openzh_uns.groupby(axis=1,level=0).count().loc[:,'Confirmed Cases'].iloc[-1]
+min_date = min(df_openzh_ch_diff.index)
+max_date = max(df_openzh_ch_diff.index)
 
 df_plot1 = df_openzh_ch[['Confirmed Cases', 'Fatalities', 'Released']].stack().reset_index()
 df_plot1.columns = ['Date', 'Type', 'Reported Numbers']
@@ -240,9 +243,17 @@ app.layout = html.Div( children=[
     html.Div(className="grid-container-nb", children=[
         html.Div(className="grid-item-1c", children=[
             html.H3('Charts Switzerland'),
-            dcc.Graph(figure=fig1_ch),
-            dcc.Graph(figure=fig2_ch),
-            dcc.Graph(figure=fig3_ch),
+            dcc.DatePickerRange(id='date-picker-range',
+                                min_date_allowed=datetime.strptime(min_date, "%Y-%m-%d"),
+                                max_date_allowed=datetime.strptime(max_date, "%Y-%m-%d")+timedelta(hours=23),
+                                initial_visible_month=datetime.strptime(max_date, "%Y-%m-%d"),
+                                start_date=datetime.strptime(start_date, "%Y-%m-%d"), 
+                                end_date=datetime.strptime(max_date, "%Y-%m-%d"),
+                                display_format="DD.MM.YYYY"
+                                ),
+            dcc.Graph(id="figure_ch1", ),
+            dcc.Graph(id="figure_ch2", ),
+            dcc.Graph(id="figure_ch3", ),
             ]),
        ]),
     html.Div(className="grid-container-nb", children=[
@@ -357,6 +368,43 @@ def update_figure2(indicator_val, report_val , date_val):
             },
         }
 
+@app.callback(
+    [Output('figure_ch1', 'figure'),
+     Output('figure_ch2', 'figure'),
+     Output('figure_ch3', 'figure')],
+    [Input('date-picker-range', 'start_date'),
+     Input('date-picker-range', 'end_date')])
+def update_output(start_date, end_date):
+    start_date = re.split('T| ', start_date)[0]
+    end_date = re.split('T| ', end_date)[0]
+    df_filtered = df_openzh_ch[start_date:end_date]
+    df_filtered1 = df_filtered[['Confirmed Cases', 'Fatalities', 'Released']].stack().reset_index()
+    df_filtered1.columns = ['Date', 'Type', 'Reported Numbers']
+    fig1 = plot_line(df_filtered1 ,'Date', 'Reported Numbers', 'Type','' ,'Confirmed Cases, Fatalities and Released from Hospital')
+    
+    df_filtered2 = df_filtered[['Hospitalised', 'Intensive Care', 'Ventilator']].stack().reset_index()
+    df_filtered2.columns = ['Date', 'Type', 'Reported Numbers']
+    fig2 = plot_line(df_filtered2 ,'Date', 'Reported Numbers', 'Type','' ,'Hospitalisation')
+
+    df_filtered_growth = df_openzh_ch_growth[start_date:end_date]
+    df_filtered3 = df_filtered_growth[['Confirmed Cases', 'Fatalities']].stack().reset_index()
+    df_filtered3.columns = ['Date', 'Type', 'Percentage Changes']
+    fig3 = plot_line(df_filtered3 ,'Date', 'Percentage Changes', 'Type','' ,'Percentage Changes')
+
+    return fig1, fig2, fig3
+    # string_prefix = 'You have selected: '
+    # if start_date is not None:
+    #     start_date = dt.strptime(re.split('T| ', start_date)[0], '%Y-%m-%d')
+    #     start_date_string = start_date.strftime('%B %d, %Y')
+    #     string_prefix = string_prefix + 'Start Date: ' + start_date_string + ' | '
+    # if end_date is not None:
+    #     end_date = dt.strptime(re.split('T| ', end_date)[0], '%Y-%m-%d')
+    #     end_date_string = end_date.strftime('%B %d, %Y')
+    #     string_prefix = string_prefix + 'End Date: ' + end_date_string
+    # if len(string_prefix) == len('You have selected: '):
+    #     return 'Select a date to see it displayed here'
+    # else:
+    #     return string_prefix
 
 
 if __name__ == '__main__':
